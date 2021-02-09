@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 import glob
 
+# debug
+np.random.seed(1)
+
 test_img = np.empty((0, 2500), float)
 test_ans = np.empty((0, 10), float)
 
@@ -19,8 +22,18 @@ for f in glob.glob('./images/*.png'):
     # insert to random row
     test_ans = np.insert(test_ans, r, np.array([temp_ans]), axis=0)
 
-# test_img: (test images, 2500)
-# test_ans: (test images, 10)
+# activation function
+def sigmoid(x, d=False):
+    if d:
+        return sigmoid(x) * (1 - sigmoid(x))
+    return 1 / (1 + np.exp(1) ** (-x))
 
-print(test_img)
-print(test_ans)
+# configs
+iteration = 100000
+
+# weights init
+weights_0 = 2 * np.random.random((2500, 2500)) - 1
+weights_1 = 2 * np.random.random((2500, 10)) - 1
+
+for i in range(iteration):
+    pass
