@@ -25,6 +25,12 @@ for f in glob.glob('./images/*.png'):
 # activation function
 
 
+def relu(x, d=False):
+    if d:
+        pass
+    return np.maximum(0, x)
+
+
 def sigmoid(x, d=False):
     if d:
         return x * (1 - x)
@@ -41,12 +47,4 @@ weights_1 = 2 * np.random.random((2500, 10)) - 1
 
 # training process
 for i in range(iteration):
-    hidden_layer_1 = np.dot(test_img, weights_0) + 1
-    hidden_layer_2 = sigmoid(hidden_layer_1)
-    output_1 = np.dot(hidden_layer_2, weights_1) + 1
-    output_2 = sigmoid(output_1)
-    error = (test_ans - output_2) ** 2
-    print("average error:", np.mean(np.sum(error, axis=0)))
-    delta = 2 * (test_ans - output_2) * sigmoid(output_1, True)
-    delta = np.dot(delta.T, hidden_layer_2).T
-    weights_1 -= delta
+    pass
