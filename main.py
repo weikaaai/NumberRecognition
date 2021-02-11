@@ -40,8 +40,9 @@ def sigmoid(x, d=False):
 
 
 # configs
-iteration = 3
-learning_rate = 0.01
+np.set_printoptions(threshold=np.inf)
+iteration = 1000
+learning_rate = 0.1
 
 # weights init
 weights_0 = 2 * np.random.random((2500, 2500)) - 1
@@ -72,3 +73,21 @@ for i in range(iteration):
     tmp15 = np.dot(tmp11, tmp14)
     weights_0 = weights_0 + (learning_rate * tmp15)
     weights_1 = weights_1 + (learning_rate * tmp3)
+
+print('saving results...')
+results = f'''
+--------------------------------------------------
+iteration: {iteration}
+final mean error: {m_err}
+--------------------------------------------------
+final weights_0:
+{weights_0}
+--------------------------------------------------
+final weights_1:
+{weights_1}
+--------------------------------------------------
+'''
+# f = open('output.txt', 'w')
+# f.write(results)
+# f.close()
+# print('results saved to output.txt')
