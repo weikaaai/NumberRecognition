@@ -27,9 +27,9 @@ for f in glob.glob('./images/*.png'):
 
 def relu(x, d=False):
     if d:
-        if x > 0:
-            return 1
-        return 0
+        x[x <= 0] = 0
+        x[x > 0] = 1
+        return x
     return np.maximum(0, x)
 
 
@@ -53,6 +53,7 @@ b_1 = 1
 
 # training process
 for i in range(iteration):
+    # forward
     p1 = np.dot(train_img, weights_0) + b_0
     act1 = relu(p1)
     p2 = np.dot(act1, weights_1) + b_1
@@ -60,7 +61,14 @@ for i in range(iteration):
     err = (train_ans - act2) ** 2
     m_err = np.mean(np.sum(err, axis=0))
     print('mean error:', m_err)
+    # backward
     tmp1 = act1.T
     tmp2 = 2 * (train_ans - act2) * sigmoid(p2, True)
     tmp3 = np.dot(tmp1, tmp2)
+    tmp11 = train_img.T
+    tmp12 = 2 * (train_ans - act2) * sigmoid(p2, True)
+    tmp13 = np.dot(tmp12, weights_1.T)
+    tmp14 = tmp13 * relu(p1, True)
+    tmp15 = np.dot(tmp11, tmp14)
+    weights_0 = weights_0 + (learning_rate * tmp15)
     weights_1 = weights_1 + (learning_rate * tmp3)
