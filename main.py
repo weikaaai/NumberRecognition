@@ -41,8 +41,8 @@ def sigmoid(x, d=False):
 
 # configs
 np.set_printoptions(threshold=np.inf)
-iteration = 10
-learning_rate = 0.1
+iteration = 300
+learning_rate = 0.01
 
 # weights init
 weights_0 = np.random.uniform(-1, 1, (2500, 2500))
