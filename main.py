@@ -5,8 +5,8 @@ import glob
 # debug
 np.random.seed(1)
 
-train_img = np.empty((0, 2500), float)
-train_ans = np.empty((0, 10), float)
+train_img = np.empty((0, 2500), np.float32)
+train_ans = np.empty((0, 10), np.float32)
 
 # import training images
 for f in glob.glob('./images/*.png'):
@@ -25,12 +25,12 @@ for f in glob.glob('./images/*.png'):
 # activation function
 
 
-def relu(x, d=False):
-    if d:
-        x[x <= 0] = 0
-        x[x > 0] = 1
-        return x
-    return np.maximum(0, x)
+# def relu(x, d=False):
+#     if d:
+#         x[x <= 0] = 0
+#         x[x > 0] = 1
+#         return x
+#     return np.maximum(0, x)
 
 
 def sigmoid(x, d=False):
@@ -41,12 +41,12 @@ def sigmoid(x, d=False):
 
 # configs
 np.set_printoptions(threshold=np.inf)
-iteration = 300
-learning_rate = 0.01
+iteration = 100000
+learning_rate = 0.001
 
 # weights init
-weights_0 = np.random.uniform(-1, 1, (2500, 2500))
-weights_1 = np.random.uniform(-1, 1, (2500, 10))
+weights_0 = np.random.uniform(-1, 1, (2500, 100))
+weights_1 = np.random.uniform(-1, 1, (100, 10))
 
 # bias init
 b_0 = 1
@@ -72,7 +72,7 @@ for i in range(iteration):
     weights_1 = weights_1 + (learning_rate * t2)
 
 # testing network
-test_img = cv2.imread('./timages/5-1.png', 0)
+test_img = cv2.imread('./images/5-1.png', 0)
 test_img = test_img.flatten()
 test_img = test_img / 255.0
 p1 = np.dot(test_img, weights_0)
@@ -80,7 +80,6 @@ z1 = sigmoid(p1)
 p2 = np.dot(z1, weights_1)
 z2 = sigmoid(p2)
 print(z2)
-
 
 # print('saving results...')
 # results = f'''
