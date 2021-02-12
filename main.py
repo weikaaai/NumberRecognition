@@ -5,8 +5,8 @@ import glob
 # debug
 np.random.seed(1)
 
-train_img = np.empty((0, 2500), np.float128)
-train_ans = np.empty((0, 10), np.float128)
+train_img = np.empty((0, 2500), np.float32)
+train_ans = np.empty((0, 10), np.float32)
 
 # import training images
 for f in glob.glob('./images/*.png'):
@@ -25,12 +25,12 @@ for f in glob.glob('./images/*.png'):
 # activation function
 
 
-def relu(x, d=False):
-    if d:
-        x[x <= 0] = 0
-        x[x > 0] = 1
-        return x
-    return np.maximum(0, x)
+# def relu(x, d=False):
+#     if d:
+#         x[x <= 0] = 0
+#         x[x > 0] = 1
+#         return x
+#     return np.maximum(0, x)
 
 
 def sigmoid(x, d=False):
@@ -41,52 +41,59 @@ def sigmoid(x, d=False):
 
 # configs
 np.set_printoptions(threshold=np.inf)
-iteration = 1000
-learning_rate = 0.1
+iteration = 100000
+learning_rate = 0.001
 
 # weights init
-weights_0 = 2 * np.random.random((2500, 2500)) - 1
-weights_1 = 2 * np.random.random((2500, 10)) - 1
+weights_0 = np.random.uniform(-1, 1, (2500, 100))
+weights_1 = np.random.uniform(-1, 1, (100, 10))
 
 # bias init
 b_0 = 1
 b_1 = 1
 
-# training process
+# training network
 for i in range(iteration):
     # forward
     p1 = np.dot(train_img, weights_0) + b_0
-    act1 = relu(p1)
+    act1 = sigmoid(p1)
     p2 = np.dot(act1, weights_1) + b_1
     act2 = sigmoid(p2)
     err = (train_ans - act2) ** 2
     m_err = np.mean(np.sum(err, axis=0))
     print('mean error:', m_err)
     # backward
-    tmp1 = act1.T
-    tmp2 = 2 * (train_ans - act2) * sigmoid(p2, True)
-    tmp3 = np.dot(tmp1, tmp2)
-    tmp11 = train_img.T
-    tmp12 = 2 * (train_ans - act2) * sigmoid(p2, True)
-    tmp13 = np.dot(tmp12, weights_1.T)
-    tmp14 = tmp13 * relu(p1, True)
-    tmp15 = np.dot(tmp11, tmp14)
-    weights_0 = weights_0 + (learning_rate * tmp15)
-    weights_1 = weights_1 + (learning_rate * tmp3)
+    t1 = 2 * (train_ans - act2) * sigmoid(p2, True)
+    t2 = np.dot(act1.T, t1)
+    t_1 = np.dot(weights_1, t1.T)
+    t_2 = sigmoid(p1, True) * t_1.T
+    t_3 = np.dot(train_img.T, t_2)
+    weights_0 = weights_0 + (learning_rate * t_3)
+    weights_1 = weights_1 + (learning_rate * t2)
 
-print('saving results...')
-results = f'''
---------------------------------------------------
-iteration: {iteration}
-final mean error: {m_err}
---------------------------------------------------
-final weights_0:
-{weights_0}
---------------------------------------------------
-final weights_1:
-{weights_1}
---------------------------------------------------
-'''
+# testing network
+test_img = cv2.imread('./images/5-1.png', 0)
+test_img = test_img.flatten()
+test_img = test_img / 255.0
+p1 = np.dot(test_img, weights_0)
+z1 = sigmoid(p1)
+p2 = np.dot(z1, weights_1)
+z2 = sigmoid(p2)
+print(z2)
+
+# print('saving results...')
+# results = f'''
+# --------------------------------------------------
+# iteration: {iteration}
+# final mean error: {m_err}
+# --------------------------------------------------
+# final weights_0:
+# {weights_0}
+# --------------------------------------------------
+# final weights_1:
+# {weights_1}
+# --------------------------------------------------
+# '''
 # f = open('output.txt', 'w')
 # f.write(results)
 # f.close()
