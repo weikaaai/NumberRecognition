@@ -41,12 +41,13 @@ def sigmoid(x, d=False):
 
 # configs
 np.set_printoptions(threshold=np.inf)
-iteration = 1
+iteration = 30000
 learning_rate = 0.001
+hidden = 100
 
 # weights init
-weights_0 = np.random.uniform(-1, 1, (2500, 100))
-weights_1 = np.random.uniform(-1, 1, (100, 10))
+weights_0 = np.random.uniform(-1, 1, (2500, hidden))
+weights_1 = np.random.uniform(-1, 1, (hidden, 10))
 
 # bias init
 b_0 = 1
