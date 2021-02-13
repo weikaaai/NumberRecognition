@@ -41,7 +41,7 @@ def sigmoid(x, d=False):
 
 # configs
 np.set_printoptions(threshold=np.inf)
-iteration = 100000
+iteration = 1
 learning_rate = 0.001
 
 # weights init
